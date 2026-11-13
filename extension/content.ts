@@ -103,7 +103,6 @@ function badgeElement(dr: number | null): HTMLSpanElement {
       direction: ltr !important;
       unicode-bidi: isolate !important;
       white-space: nowrap;
-      transform: scaleY(-1);
     }
     bdi, a {
       direction: ltr !important;
