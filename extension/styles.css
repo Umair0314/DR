@@ -1,0 +1,8 @@
+.seo-serp-metrics-badge {
+  display: inline-flex;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  writing-mode: horizontal-tb !important;
+  margin: 5px 0 0 !important;
+  vertical-align: middle;
+}

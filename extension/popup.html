@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SEO SERP Metrics</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header>
+        <div class="brand-mark" aria-hidden="true">DR</div>
+        <div>
+          <h1>SEO SERP Metrics</h1>
+          <p id="version"></p>
+        </div>
+      </header>
+      <p class="description">See Ahrefs Domain Rating beside organic Google results.</p>
+      <label class="toggle-row" for="enabled">
+        <span>Enable on Google Search</span>
+        <input id="enabled" type="checkbox">
+      </label>
+      <p id="status" role="status" aria-live="polite"></p>
+      <footer>
+        <a href="https://ahrefs.com/" target="_blank" rel="noreferrer">Domain Rating by Ahrefs</a>
+        <button id="settings" type="button">Settings</button>
+      </footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

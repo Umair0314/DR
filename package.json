@@ -1,0 +1,15 @@
+{
+  "name": "seo-serp-metrics",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm run build --workspace backend && npm run build --workspace extension",
+    "dev:backend": "npm run dev --workspace backend",
+    "build:backend": "npm run build --workspace backend",
+    "build:extension": "npm run build --workspace extension"
+  },
+  "workspaces": [
+    "backend",
+    "extension"
+  ]
+}

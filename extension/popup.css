@@ -1,0 +1,14 @@
+* { box-sizing: border-box; }
+body { width: 320px; margin: 0; color: #17211d; font: 13px/1.45 system-ui, sans-serif; }
+.panel { padding: 18px; }
+header { display: flex; align-items: center; gap: 11px; }
+.brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: #e4f6ed; color: #147649; font-size: 13px; font-weight: 800; }
+h1 { margin: 0; font-size: 16px; }
+header p { margin: 2px 0 0; color: #68746e; font-size: 11px; }
+.description { margin: 17px 0; color: #59665f; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid #e8ece9; border-bottom: 1px solid #e8ece9; font-weight: 600; }
+input { accent-color: #16834f; }
+#status { min-height: 18px; margin: 8px 0; color: #647169; }
+footer { display: flex; align-items: center; justify-content: space-between; }
+a { color: #167747; text-decoration: none; }
+button { padding: 7px 10px; border: 0; border-radius: 7px; background: #f0f3f1; color: #203229; cursor: pointer; }

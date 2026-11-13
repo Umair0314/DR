@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SEO SERP Metrics Settings</title>
+    <link rel="stylesheet" href="settings.css">
+  </head>
+  <body>
+    <main>
+      <h1>SEO SERP Metrics</h1>
+      <p>Configure the secure backend used to request Domain Ratings.</p>
+      <form id="settings-form">
+        <label for="backend-url">Backend URL</label>
+        <input id="backend-url" name="backend-url" type="url" required placeholder="http://localhost:3000">
+        <small>Use the backend origin only, without /api/metrics/dr.</small>
+        <button type="submit">Save settings</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+      <a href="https://ahrefs.com/" target="_blank" rel="noreferrer">Domain Rating by Ahrefs</a>
+    </main>
+    <script src="settings.js"></script>
+  </body>
+</html>
