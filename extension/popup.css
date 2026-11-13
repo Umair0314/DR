@@ -12,3 +12,12 @@ input { accent-color: #16834f; }
 footer { display: flex; align-items: center; justify-content: space-between; }
 a { color: #167747; text-decoration: none; }
 button { padding: 7px 10px; border: 0; border-radius: 7px; background: #f0f3f1; color: #203229; cursor: pointer; }
+.redirect-access { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; }
+.redirect-access p { margin: 0; color: #647169; font-size: 10px; }
+#enable-redirect-checks { flex: 0 0 auto; padding: 6px 8px; font-size: 10px; }
+.portfolio-cta { margin-top: 12px; text-align: center; }
+.portfolio-cta .divider { height: 1px; margin-bottom: 12px; background: #e2e6e3; }
+.cta-title { margin: 0; color: #27342d; font-size: 12px; font-weight: 700; }
+.cta-services { margin: 4px 0 10px; color: #68746e; font-size: 10px; }
+#seo-audit { padding: 10px; border-radius: 8px; background: #1a73e8; color: #fff; font-weight: 700; }
+#seo-audit:hover { background: #1765cc; }

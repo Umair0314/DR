@@ -52,7 +52,7 @@ Review the changed file list before staging. Stage only the files you intend to 
 
 ```bash
 git status
-git add extension/content.ts extension/styles.css seo-serp-metrics-test.zip commands.md
+git add extension/content.ts extension/background.ts extension/popup.html extension/popup.ts extension/popup.css extension/manifest.json extension/styles.css README.md guide.md seo-serp-metrics-test.zip commands.md
 git diff --cached --check
 git status
 git commit -m "Describe your update"

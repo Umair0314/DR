@@ -99,6 +99,8 @@ This project currently supports **local unpacked testing**; it is not uploaded t
 6. Keep the backend terminal running.
 7. Open a Google Search page on a supported Google country domain and search for something.
 8. Use the extension popup to check or change its enabled state. The test build defaults to `https://dr-eosin-gamma.vercel.app`; use **Settings** only if you need another backend.
+9. To show redirect status, click **Enable Redirect Checks** in the popup and approve Chrome's optional access to all HTTP/HTTPS websites. This is required to inspect cross-origin redirect headers. Redirect checks run in the background after DR is displayed; blocked, denied, or timed-out checks show `Redirect: Unknown`.
+10. The popup's **Get Free SEO Audit** button opens `https://umairdigital.vercel.app` in a new tab.
 
 If you rebuild the extension, return to `chrome://extensions` and click the extension's **Reload** button. Refresh the Google results tab after reloading the extension.
 
@@ -136,6 +138,8 @@ The shared test ZIP is preconfigured to use `https://dr-eosin-gamma.vercel.app`.
 
 - Search results show a badge only when an Ahrefs rating was returned; missing data should show `DR: N/A`.
 - The badge is below the organic result's meta description when Google provides one, and links to Ahrefs attribution. For results without a snippet, it falls back to placement after the title.
+- The badge shows the DR score and redirect result on one line. Redirect lookup uses manual `HEAD`, falls back to `GET` with immediate abort after headers when needed, times out after three seconds per URL, and uses an in-memory service-worker `Map` cache only.
+- Redirect inspection requires optional all-sites permission. The user must click **Enable Redirect Checks** in the popup and accept Chrome's permission prompt; no redirect API or backend is used.
 - Repeated domains do not cause duplicate badges or repeated immediate lookups.
 - Results added dynamically or after Google navigation are handled.
 - Turning the extension off removes badges; turning it on restores processing.

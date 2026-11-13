@@ -1,6 +1,6 @@
 # SEO SERP Metrics
 
-Version 1.0.0 is a lightweight Chrome Extension and Next.js backend that displays the official Ahrefs Domain Rating (DR) for organic Google Search results. It does not expose the Ahrefs API key to the browser.
+Version 1.0.0 is a lightweight Chrome Extension and Next.js backend that displays the official Ahrefs Domain Rating (DR) and checks result redirects for organic Google Search results. It does not expose the Ahrefs API key to the browser.
 
 ## Requirements
 
@@ -38,6 +38,8 @@ Google country domains are explicitly listed in `extension/manifest.json`. Add a
 
 - Only search-result links with a result heading are considered; Google internal links, ad containers, and common video results are ignored. The DR badge is placed after Google's meta-description snippet when available, with a title fallback for results without a snippet.
 - The content script observes dynamic result changes and Google SPA navigation and batches up to ten domains per backend request.
+- Redirect checks run separately in the extension service worker after the DR badge appears. They use manual HEAD requests with a GET fallback, a three-second per-URL timeout, and an in-memory cache for the worker session. They do not use a redirect API, backend endpoint, or database.
+- Chrome requires optional access to result websites to inspect cross-origin redirect headers. Users must explicitly enable this in the extension popup; if permission is denied or a response cannot be inspected, the badge shows `Redirect: Unknown`.
 - Client cache entries are held in `chrome.storage.local`; successful values expire after 24 hours and unavailable values after ten minutes. The backend cache is authoritative.
 - Unavailable data displays `DR: N/A`; the extension never substitutes a made-up score.
 - The backend sends only normalized domain requests to `https://api.ahrefs.com/v3/public/domain-rating-free` using `Authorization: Bearer ...`.

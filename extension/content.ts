@@ -2,6 +2,10 @@ type Settings = { enabled?: boolean; backendUrl?: string };
 type CachedRating = { dr: number | null; expiresAt: number };
 type ResultItem = { domain: string; target: HTMLElement };
 type MetricsResponse = { results: { domain: string; dr: number | null }[] };
+type RedirectResult =
+  | { status: "yes"; destination: string }
+  | { status: "no" }
+  | { status: "unknown" };
 
 const BADGE_SELECTOR = "[data-seo-serp-metrics]";
 const CACHE_KEY = "domainRatingsV2";
@@ -13,6 +17,7 @@ const MAX_DOMAINS_PER_REQUEST = 10;
 const pendingResults = new Map<string, Set<HTMLElement>>();
 const queuedDomains = new Set<string>();
 const requestedDomains = new Set<string>();
+const redirectBadgeUpdates = new WeakMap<HTMLElement, (result: RedirectResult) => void>();
 let enabled = true;
 let scanTimer = 0;
 let flushTimer = 0;
@@ -70,7 +75,7 @@ function normalizedHostname(href: string): string | null {
   }
 }
 
-function badgeElement(dr: number | null): HTMLSpanElement {
+function badgeElement(dr: number | null): { element: HTMLSpanElement; setRedirect: (result: RedirectResult) => void } {
   const badge = document.createElement("span");
   badge.dataset.seoSerpMetrics = "true";
   badge.dir = "ltr";
@@ -104,6 +109,15 @@ function badgeElement(dr: number | null): HTMLSpanElement {
       unicode-bidi: isolate !important;
       white-space: nowrap;
     }
+    .score { font-weight: 700; }
+    .separator { color: #78827c; font-weight: 400; }
+    .redirect {
+      font-size: 10px;
+      font-weight: 400;
+    }
+    .redirect.no { color: #17653c; }
+    .redirect.yes { color: #a45b0a; }
+    .redirect.unknown { color: #737b76; }
     bdi, a {
       direction: ltr !important;
       unicode-bidi: isolate !important;
@@ -124,9 +138,21 @@ function badgeElement(dr: number | null): HTMLSpanElement {
   content.dir = "ltr";
 
   const score = document.createElement("bdi");
+  score.className = "score";
   score.dir = "ltr";
-  score.textContent = dr === null ? "DR: N/A" : `DR ${dr}`;
+  score.textContent = dr === null ? "DR: N/A" : `DR: ${dr}`;
   content.append(score);
+
+  const separator = document.createElement("span");
+  separator.className = "separator";
+  separator.textContent = " | ";
+  content.append(separator);
+
+  const redirect = document.createElement("small");
+  redirect.className = "redirect unknown";
+  redirect.dir = "ltr";
+  redirect.textContent = "Redirect: Unknown";
+  content.append(redirect);
 
   const attribution = document.createElement("a");
   attribution.dir = "ltr";
@@ -139,7 +165,18 @@ function badgeElement(dr: number | null): HTMLSpanElement {
   attribution.append(attributionText);
   content.append(attribution);
   shadow.append(style, content);
-  return badge;
+  return {
+    element: badge,
+    setRedirect(result) {
+      redirect.className = `redirect ${result.status}`;
+      redirect.textContent =
+        result.status === "yes"
+          ? `Redirect: Yes -> ${result.destination}`
+          : result.status === "no"
+            ? "Redirect: No"
+            : "Redirect: Unknown";
+    },
+  };
 }
 
 function setBadge(target: HTMLElement, dr: number | null): void {
@@ -150,7 +187,43 @@ function setBadge(target: HTMLElement, dr: number | null): void {
   const snippet = target.querySelector<HTMLElement>(
     ".VwiC3b, .IsZvec, .aCOpRe, [data-sncf]",
   );
-  (snippet ?? title).insertAdjacentElement("afterend", badgeElement(dr));
+  const badge = badgeElement(dr);
+  redirectBadgeUpdates.set(badge.element, badge.setRedirect);
+  (snippet ?? title).insertAdjacentElement("afterend", badge.element);
+
+  // REDIRECT FEATURE START
+  checkRedirectForBadge(badge.element, target);
+}
+
+function checkRedirectForBadge(badge: HTMLElement, target: HTMLElement): void {
+  const resultLink = target.querySelector<HTMLHeadingElement>("h3")?.closest<HTMLAnchorElement>("a[href]");
+  if (!resultLink) {
+    redirectBadgeUpdates.get(badge)?.({ status: "unknown" });
+    return;
+  }
+
+  void chrome.runtime
+    .sendMessage({ type: "CHECK_REDIRECT", url: resultLink.href })
+    .then((result: unknown) => {
+      if (!badge.isConnected) return;
+      const update = redirectBadgeUpdates.get(badge);
+      if (!update || !result || typeof result !== "object") return;
+      const redirectResult = result as RedirectResult;
+      if (
+        redirectResult.status === "yes" &&
+        typeof redirectResult.destination === "string"
+      ) {
+        update(redirectResult);
+      } else if (redirectResult.status === "no" || redirectResult.status === "unknown") {
+        update(redirectResult);
+      }
+    })
+    .catch(() => {
+      if (badge.isConnected) {
+        redirectBadgeUpdates.get(badge)?.({ status: "unknown" });
+      }
+    });
+  // REDIRECT FEATURE END
 }
 
 function isFresh(entry: CachedRating | undefined): entry is CachedRating {

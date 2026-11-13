@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SEO SERP Metrics",
   "version": "1.0.0",
-  "description": "View Ahrefs Domain Rating beside organic Google search results.",
+  "description": "View Ahrefs Domain Rating and redirect status beside organic Google search results.",
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.google.com/*",
