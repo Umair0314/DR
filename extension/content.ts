@@ -6,6 +6,7 @@ type MetricsResponse = { results: { domain: string; dr: number | null }[] };
 const BADGE_SELECTOR = "[data-seo-serp-metrics]";
 const CACHE_KEY = "domainRatingsV2";
 const LEGACY_CACHE_KEY = "domainRatings";
+const DEFAULT_BACKEND_URL = "https://dr-eosin-gamma.vercel.app";
 const NEGATIVE_CACHE_TTL = 10 * 60 * 1000;
 const POSITIVE_CACHE_TTL = 24 * 60 * 60 * 1000;
 const MAX_DOMAINS_PER_REQUEST = 10;
@@ -147,7 +148,10 @@ function setBadge(target: HTMLElement, dr: number | null): void {
   target.querySelector(BADGE_SELECTOR)?.remove();
   const title = target.querySelector("h3");
   if (!title) return;
-  title.insertAdjacentElement("afterend", badgeElement(dr));
+  const snippet = target.querySelector<HTMLElement>(
+    ".VwiC3b, .IsZvec, .aCOpRe, [data-sncf]",
+  );
+  (snippet ?? title).insertAdjacentElement("afterend", badgeElement(dr));
 }
 
 function isFresh(entry: CachedRating | undefined): entry is CachedRating {
@@ -197,7 +201,7 @@ async function flushQueue(): Promise<void> {
     disableBadges();
     return;
   }
-  const backendUrl = settings.backendUrl || "http://localhost:3000";
+  const backendUrl = settings.backendUrl || DEFAULT_BACKEND_URL;
   const now = Date.now();
   const toFetch: string[] = [];
 

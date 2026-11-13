@@ -29,6 +29,7 @@
     "https://www.google.pl/*",
     "https://www.google.se/*",
     "https://www.google.ch/*",
+    "https://dr-eosin-gamma.vercel.app/*",
     "http://localhost:3000/*"
   ],
   "optional_host_permissions": ["https://*/*", "http://*/*"],

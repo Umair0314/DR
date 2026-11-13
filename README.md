@@ -30,13 +30,13 @@ The backend rate limit and cache are process-local. For a multi-instance product
 1. Run `npm install` and `npm run build:extension` from the project root.
 2. In Chrome, open `chrome://extensions`, enable **Developer mode**, and choose **Load unpacked**.
 3. Select the generated `extension/dist` folder.
-4. Click the extension icon to enable/disable badges or open **Settings** to configure your backend URL.
+4. Click the extension icon to enable/disable badges. The shared test build uses `https://dr-eosin-gamma.vercel.app` by default; open **Settings** only if you need to change the backend.
 
 Google country domains are explicitly listed in `extension/manifest.json`. Add additional country hosts to both `host_permissions` and the content script's `matches` if your Google domain is not included.
 
 ## Behavior and safety
 
-- Only search-result links with a result heading are considered; Google internal links, ad containers, and common video results are ignored.
+- Only search-result links with a result heading are considered; Google internal links, ad containers, and common video results are ignored. The DR badge is placed after Google's meta-description snippet when available, with a title fallback for results without a snippet.
 - The content script observes dynamic result changes and Google SPA navigation and batches up to ten domains per backend request.
 - Client cache entries are held in `chrome.storage.local`; successful values expire after 24 hours and unavailable values after ten minutes. The backend cache is authoritative.
 - Unavailable data displays `DR: N/A`; the extension never substitutes a made-up score.

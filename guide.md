@@ -98,7 +98,7 @@ This project currently supports **local unpacked testing**; it is not uploaded t
 5. Confirm that **SEO SERP Metrics** appears in the extensions list.
 6. Keep the backend terminal running.
 7. Open a Google Search page on a supported Google country domain and search for something.
-8. Use the extension popup to check or change its enabled state. The default backend URL is `http://localhost:3000`; use **Settings** if you need to change it.
+8. Use the extension popup to check or change its enabled state. The test build defaults to `https://dr-eosin-gamma.vercel.app`; use **Settings** only if you need another backend.
 
 If you rebuild the extension, return to `chrome://extensions` and click the extension's **Reload** button. Refresh the Google results tab after reloading the extension.
 
@@ -116,7 +116,7 @@ Vercel replaces the always-running local backend terminal. The Chrome extension 
 
    Add the variables to the environment(s) where you will deploy (Preview and/or Production). Do not upload `.env.local` to Git.
 5. Deploy the project and copy its HTTPS origin, for example `https://your-project.vercel.app`.
-6. In Chrome, open the extension's **Settings**, enter that origin as the **Backend URL** (no `/api/metrics/dr` suffix), and save. Approve Chrome's requested host permission.
+6. This test build defaults to `https://dr-eosin-gamma.vercel.app`. If you deploy another backend, enter its HTTPS origin in extension **Settings** (without `/api/metrics/dr`) and save. Chrome may ask permission for a custom host.
 7. Test the deployment from Terminal with:
 
    ```bash
@@ -130,10 +130,12 @@ Vercel replaces the always-running local backend terminal. The Chrome extension 
 
 The backend's cache and rate limiter currently use in-memory process storage. On Vercel these may reset between invocations or differ across serverless instances. This is acceptable for initial testing; for production traffic, replace them with shared cache and rate-limit storage. Do not rely on CORS or an extension ID as backend authentication.
 
+The shared test ZIP is preconfigured to use `https://dr-eosin-gamma.vercel.app`. New installs use that backend automatically; installs upgrading from the old `http://localhost:3000` default migrate to the Vercel URL. Custom backend URLs are preserved.
+
 ## 5. What to verify
 
 - Search results show a badge only when an Ahrefs rating was returned; missing data should show `DR: N/A`.
-- The badge is below an organic result title and links to Ahrefs attribution.
+- The badge is below the organic result's meta description when Google provides one, and links to Ahrefs attribution. For results without a snippet, it falls back to placement after the title.
 - Repeated domains do not cause duplicate badges or repeated immediate lookups.
 - Results added dynamically or after Google navigation are handled.
 - Turning the extension off removes badges; turning it on restores processing.
